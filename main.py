@@ -294,12 +294,12 @@ if __name__ == '__main__':
     #初期化
     init = tf.global_variables_initializer()
     saver = tf.train.Saver(max_to_keep = 3)
+    summaries = tf.summary.merge_all()
 
     with tf.Session() as sess:
 
         ckpt_state = tf.train.get_checkpoint_state('models/')
         summary_writer = tf.summary.FileWriter(s.LOG_DIR,sess.graph)
-        summaries = tf.summary.merge_all()
 
         if ckpt_state:
             last_model = ckpt_state.model_checkpoint_path
@@ -332,34 +332,4 @@ if __name__ == '__main__':
             actual_classes: training_classes_tf.values.reshape(len(training_classes_tf.values), 2)
         }
         s.tf_confusion_metrics(model, actual_classes, sess, feed_dict)
-
-    '''
-    init = tf.global_variables_initializer()
-    sess = tf.Session()
-    summary_writer = tf.summary.FileWriter(s.LOG_DIR,sess.graph)
-    summaries = tf.summary.merge_all()
-    sess.run(init)
-
-    for i in range(1, 10001):
-        sess.run(
-            training_step,
-            feed_dict={
-                feature_data: training_predictors_tf.values,
-                actual_classes: training_classes_tf.values.reshape(len(training_classes_tf.values), 2)
-            }
-        )
-        if i % 100 == 0:
-            summary, loss_, accuracy_  = sess.run([summaries, cost, accuracy],feed_dict={
-                feature_data: training_predictors_tf.values,
-                actual_classes: training_classes_tf.values.reshape(len(training_classes_tf.values), 2)
-            })
-            summary_writer.add_summary(summary, i)
-            saver.save(sess,'models/mymodel',global_step=i,write_meta_graph=False)
-
-    feed_dict={
-        feature_data: training_predictors_tf.values,
-        actual_classes: training_classes_tf.values.reshape(len(training_classes_tf.values), 2)
-    }
-    s.tf_confusion_metrics(model, actual_classes, sess, feed_dict)
-    '''
     
