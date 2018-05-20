@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+<hr>
+<h1>グラフ表示</h1>
+<form action="/graph" method="POST">
+    <p></p>
+    <p>
+        <select name="meigara">
+            <option value="a">NTTデータ</option>
+            <option value="b">NRI</option>
+            <option value="c">Accenture</option>
+        </select>
+    </p>
+    <button name="make_graph" value="meigara">submit</button>
+</form>
+
+<hr>
+<h1>相関性の高い銘柄</h1>
+<form action="/graph" method="POST">
+    <p></p>
+    <p>
+        <select name="meigara">
+            <option value="a">NTTデータ</option>
+            <option value="b">NRI</option>
+            <option value="c">Accenture</option>
+        </select>
+    </p>
+    <button name="calc_correlation" value="meigara">submit</button>
+</form>
+
+<hr>
+<h1>明日の予測(Up/Down)</h1>
+<form action="/graph" method="POST">
+    <p></p>
+    <p>
+        <select name="meigara">
+            <option value="a">NTTデータ</option>
+            <option value="b">NRI</option>
+            <option value="c">Accenture</option>
+        </select>
+    </p>
+    <button name="predict_value" value="meigara">submit</button>
+</form>
+
+{% endblock %}
