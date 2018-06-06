@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+    (function(){
+        "use strict";
+
+    var width = 720;
+    var height = 300;
+
+    var dataset = {{ soukanvalues|tojson }};
+    console.log(dataset)
+
+    var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+    var padding = 30;
+
+    })();
+</script>
+
+{% endblock %}
