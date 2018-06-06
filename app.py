@@ -101,12 +101,20 @@ def soukanview():
     tmp['CHA'] = Data3_df['Close']
     tmp['CHT'] = Data4_df['Close']
     #r = tmp.corr()
-    r = tmp.corr().iloc[:,1]
+    r = tmp.corr().iloc[:,0]
+    '''
     rj = r.to_json()
-    rj1 = json.loads(rj)
-    soukandatas = {'name':rj1.keys(),'values':rj1.values()}
-    print(type(soukandatas))
-    print(soukandatas)
+    print(type(r))
+    print(r)
+    print(type(rj))
+    print(rj)
+    '''
+
+    trydata = []
+    indexs = ["NTTD","KDDI","CHA","CHT"]
+    for index in indexs:
+        tmp = {"meigara":index,"values":r[index]}
+        trydata.append(tmp)
 
     '''
     for index in INDEX_LIST[1:]: 
@@ -115,7 +123,7 @@ def soukanview():
     print(r)
     '''
 
-    return render_template('soukan.html', title='相関係数画面',soukanvalues = soukandatas)
+    return render_template('soukan.html', title='相関係数画面',soukanvalues = trydata)
 
 
 @app.route('/dview', methods=['POST'])
