@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+    (function(){
+        "use strict";
+
+    
+    var data = {{ predictreslts|tojson }};
+
+    if (data == 0) {
+      document.write("UP！");
+    }else{
+      document.write("DOWN！");
+    }
+
+    })();
+</script>
+
+<form action="/" method="get">
+    <button name="backtop" >back2top</button>
+</form>
+
+{% endblock %}
