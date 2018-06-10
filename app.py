@@ -3,6 +3,8 @@ from pymongo import MongoClient
 import pandas as pd
 import datetime
 import json
+import subprocess
+
 
 app = Flask(__name__)
 app.secret_key = 'session'
@@ -126,29 +128,30 @@ def soukanview():
     return render_template('soukan.html', title='相関係数画面',soukanvalues = trydata)
 
 
-@app.route('/dview', methods=['POST'])
-def dview():
-    #oview画面で選択したクラス名を選択
-    classs = request.form['classs']
-    risklabel = session.get('risks')
+@app.route('/predict', methods=['POST'])
+def predict():
 
-    #mongoDBへ接続
-    client = MongoClient('localhost', 27017)
-    db = client.blue_database
+    args = ['python', './analyzefunc/analyze.py']
+    try:
+        subprocess.check_call(args)
+    except:
+        print("analyze failed")
 
-    #top画面で選択したrisk種別の場合の、クラスごとのリスク度を算出
-    pipe = [{'$match':{'jisyoclass':risklabel,'classs':classs}},{'$group':{'_id':'$node','count': { '$sum': 1}}}]    
-    agg = db.bldata.aggregate(pipeline = pipe)
-    node = {} 
-    for r in agg:
-        node[r['_id']] = r['count']
-    print(node)
-    node1 = node["fweb"]
-    node2 = node["即決GW"]
-    node3 = node["SOAP-GW"]
-    node4 = node["顧客バッチ"]
-    node5 = node["料金バッチ"]
-    return render_template('dview.html', title='リスク詳細画面',node1 = node1,node2 = node2,node3 = node3,node4 = node4,node5 = node5)
+    #predictreslts  = pd.read_csv("./analyzefunc/testdata/result.csv")
+    return render_template('top.html', title='TOP画面', done="予測完了！")
+
+@app.route('/pview', methods=['POST'])
+def pview():
+
+    with open('./analyzefunc/testdata/' + 'result.txt', 'r') as f:
+        predictreslts = f.read()
+    
+    if(predictreslts == "[0]"):
+        predictreslts = "0"
+    elif(predictreslts == "[1]"):
+        predictreslts = "1"
+
+    return render_template('pview.html', title='TOP画面', predictreslts=predictreslts)
 
 if __name__ == "__main__":
     app.run(debug=True)
